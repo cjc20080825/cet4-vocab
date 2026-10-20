@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>四级词汇训练营 · CET-4 Vocab Trainer</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app">
+  <!-- 侧边栏 -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">C4</div>
+      <div class="brand-text">
+        <strong>四级词汇训练营</strong>
+        <span>CET-4 Vocab Trainer</span>
+      </div>
+    </div>
+
+    <nav class="nav" id="mainNav">
+      <button class="nav-item active" data-view="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>
+        <span>学习概览</span>
+      </button>
+      <button class="nav-item" data-view="learn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5V5.5Z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H19v3H6.5A2.5 2.5 0 0 1 4 20.5Z"/></svg>
+        <span>单词学习</span><em class="nav-badge" id="badgeLearn"></em>
+      </button>
+      <button class="nav-item" data-view="test">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 4h6l1 2h3v14H5V6h3l1-2Z"/><path d="M9 12.5l2 2 4-4"/></svg>
+        <span>今日测试</span><em class="nav-badge" id="badgeTest"></em>
+      </button>
+      <button class="nav-item" data-view="review">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 3.2-6.9"/><path d="M3 4v5h5"/><path d="M12 8v4l3 2"/></svg>
+        <span>复习计划</span><em class="nav-badge" id="badgeReview"></em>
+      </button>
+      <button class="nav-item" data-view="notebook">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h11a2 2 0 0 1 2 2v16l-6.5-3.5L6 21V3Z"/></svg>
+        <span>收藏笔记</span>
+      </button>
+      <button class="nav-item" data-view="stats">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+        <span>数据统计</span>
+      </button>
+      <button class="nav-item" data-view="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-2.9-1.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 3 15H3a2 2 0 1 1 0-4h.2A1.7 1.7 0 0 0 4.4 8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 2.9-1.2V4a2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9H21a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.4.9Z"/></svg>
+        <span>学习设置</span>
+      </button>
+    </nav>
+
+    <div class="side-card">
+      <div class="side-card-title">连续学习</div>
+      <div class="streak-line">
+        <strong id="sideStreak">0</strong><span>天</span>
+        <div class="flame" id="sideFlame">🔥</div>
+      </div>
+      <div class="side-card-sub">计划进度 <b id="sidePlanPct">0%</b></div>
+      <div class="mini-bar"><i id="sidePlanBar" style="width:0%"></i></div>
+    </div>
+
+    <div class="side-foot">
+      <span class="dot"></span> 数据保存在本地浏览器
+    </div>
+  </aside>
+
+  <!-- 主区域 -->
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-title">
+        <h1 id="viewTitle">学习概览</h1>
+        <p id="viewSub">每天一点，循环到记住为止</p>
+      </div>
+      <div class="topbar-actions">
+        <div class="chip" id="chipDue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="9"/></svg>
+          <span id="chipDueText">待复习 0</span>
+        </div>
+        <div class="chip chip-ghost" id="chipDate">—</div>
+        <button class="icon-btn" id="btnQuick" title="快速开始今日学习">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="views" id="views">
+
+      <!-- ========== 概览 ========== -->
+      <section class="view active" id="view-dashboard">
+        <div class="hero">
+          <div class="hero-main">
+            <div class="hero-eyebrow">
+              <span class="pill" id="heroDay">DAY 1 / 30</span>
+              <span class="pill pill-soft" id="heroPhase">第 1 阶段 · 新词输入</span>
+            </div>
+            <h2 id="heroTitle">开始今天的学习吧</h2>
+            <p id="heroDesc">系统已按你的计划分配好今日词汇，学完立刻测试巩固。</p>
+            <div class="hero-progress-mobile"><i id="heroBarMobile"></i></div>
+            <div class="hero-actions">
+              <button class="btn btn-primary" id="heroStartLearn">
+                开始今日学习
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </button>
+              <button class="btn btn-ghost" id="heroStartTest">去做测试</button>
+            </div>
+            <div class="hero-meta">
+              <div class="hero-meta-item"><span>今日新词</span><strong id="heroNew">0</strong></div>
+              <div class="hero-meta-item"><span>待复习</span><strong id="heroDue">0</strong></div>
+              <div class="hero-meta-item"><span>今日已学</span><strong id="heroDone">0</strong></div>
+            </div>
+          </div>
+          <div class="hero-ring-wrap">
+            <svg class="ring" viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+              <circle class="ring-fg" id="heroRing" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7"></circle>
+            </svg>
+            <div class="ring-label"><strong id="heroRingPct">0%</strong><span>今日任务</span></div>
+          </div>
+        </div>
+
+        <div class="grid grid-4">
+          <div class="stat-card">
+            <div class="stat-ico ico-indigo">📚</div>
+            <div class="stat-body"><span>累计学习</span><strong id="statLearned">0</strong><em>个单词</em></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-ico ico-green">✅</div>
+            <div class="stat-body"><span>测试正确率</span><strong id="statAcc">—</strong><em id="statAccSub">暂无测试</em></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-ico ico-amber">🧠</div>
+            <div class="stat-body"><span>单词掌握率</span><strong id="statMastery">0%</strong><em id="statMasterySub">已掌握 0 词</em></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-ico ico-rose">⏳</div>
+            <div class="stat-body"><span>待处理错题</span><strong id="statWrong">0</strong><em>个待攻克</em></div>
+          </div>
+        </div>
+
+        <div class="grid grid-dash">
+          <section class="card">
+            <div class="card-head">
+              <div>
+                <h3>今日复习提醒</h3>
+                <p>按艾宾浩斯间隔曲线自动排期</p>
+              </div>
+              <button class="link-btn" data-goto="review">查看全部 →</button>
+            </div>
+            <div id="dueList" class="due-list"></div>
+          </section>
+
+          <section class="card">
+            <div class="card-head">
+              <div>
+                <h3>近 7 日学习强度</h3>
+                <p>每日新学词量 / 计划量</p>
+              </div>
+              <span class="tag" id="weekTotal">共 0 词</span>
+            </div>
+            <div id="miniWeekChart" class="mini-chart"></div>
+            <div class="legend">
+              <span><i style="background:var(--indigo)"></i>已学新词</span>
+              <span><i style="background:var(--line-strong)"></i>计划量</span>
+            </div>
+          </section>
+        </div>
+
+        <section class="card">
+          <div class="card-head">
+            <div>
+              <h3>学习路径</h3>
+              <p>学习 → 测试 → 错题二次学习 → 间隔复习，形成记忆闭环</p>
+            </div>
+          </div>
+          <div class="flow" id="flowSteps">
+            <div class="flow-step"><b>1</b><div><strong>每日新词</strong><span>卡片式记忆</span></div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step"><b>2</b><div><strong>当日测试</strong><span>选择 / 填空</span></div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step"><b>3</b><div><strong>错题重练</strong><span>直至全对</span></div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step"><b>4</b><div><strong>间隔复习</strong><span>1/2/4/7/15/30 天</span></div></div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ========== 学习 ========== -->
+      <section class="view" id="view-learn">
+        <div id="learnIntro" class="session-intro">
+          <div class="intro-card">
+            <div class="intro-badge">今日任务</div>
+            <h2 id="learnIntroTitle">今天要学 10 个新词</h2>
+            <p id="learnIntroDesc">建议先浏览单词卡片，看到释义前先自己回忆意思，记忆更深。</p>
+            <div class="intro-stats">
+              <div><span>新词</span><strong id="learnNewCount">0</strong></div>
+              <div><span>待复习</span><strong id="learnReviewCount">0</strong></div>
+              <div><span>补学前日</span><strong id="learnCarryCount">0</strong></div>
+            </div>
+            <div class="intro-types" id="learnTypes">
+              <label class="type-toggle"><input type="checkbox" id="optNew" checked /><span>学习新词</span></label>
+              <label class="type-toggle"><input type="checkbox" id="optReview" checked /><span>复习到期词</span></label>
+            </div>
+            <button class="btn btn-primary btn-lg" id="btnStartLearn">开始学习</button>
+            <p class="tip">快捷键：空格翻卡 · 1 不认识 · 2 认识</p>
+          </div>
+        </div>
+
+        <div id="learnSession" class="session hidden">
+          <div class="session-bar">
+            <div class="session-bar-left">
+              <span class="tag tag-live" id="learnMode">新词学习</span>
+              <span class="session-count"><b id="learnIdx">1</b> / <span id="learnTotal">10</span></span>
+            </div>
+            <div class="session-progress"><i id="learnProgress" style="width:0%"></i></div>
+            <button class="link-btn" id="btnExitLearn">结束本轮</button>
+          </div>
+
+          <div class="flashcard-wrap">
+            <div class="flashcard" id="flashcard">
+              <div class="fc-face fc-front">
+                <div class="fc-top">
+                  <span class="fc-tag" id="fcTag">新词</span>
+                  <button class="icon-btn sm" id="btnSpeak" title="朗读单词">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 8.5a5 5 0 0 1 0 7"/><path d="M19 5.5a9 9 0 0 1 0 13"/></svg>
+                  </button>
+                </div>
+                <div class="fc-word" id="fcWord">abandon</div>
+                <div class="fc-phonetic" id="fcPhonetic">/əˈbændən/</div>
+                <div class="fc-hint">先在心里回忆意思，再点击卡片</div>
+                <div class="fc-shine"></div>
+              </div>
+              <div class="fc-face fc-back">
+                <div class="fc-top">
+                  <span class="fc-tag tag-alt" id="fcTagBack">释义</span>
+                  <div class="fc-tools">
+                    <button class="icon-btn sm" id="btnFav" title="收藏">☆</button>
+                    <button class="icon-btn sm" id="btnSpeak2" title="朗读">🔊</button>
+                  </div>
+                </div>
+                <div class="fc-back-word" id="fcWordBack">abandon</div>
+                <div class="fc-meaning"><span class="pos" id="fcPos">v.</span><b id="fcMeaning">放弃；抛弃</b></div>
+                <div class="fc-example" id="fcExampleBox">
+                  <p id="fcExample">They had to abandon the car and walk home.</p>
+                  <p class="ex-cn" id="fcExampleCn">他们只好弃车步行回家。</p>
+                </div>
+                <div class="fc-meta" id="fcMeta"></div>
+                <div class="fc-note">
+                  <input type="text" id="fcNoteInput" placeholder="记一句你的联想 / 词根笔记…" maxlength="200" />
+                  <button class="btn btn-mini" id="btnSaveNote">保存笔记</button>
+                </div>
+                <div class="fc-stage" id="fcStage">记忆阶段 1 / 6</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fc-actions" id="fcActions">
+            <button class="btn btn-danger-ghost" id="btnUnknown">不认识 <kbd>1</kbd></button>
+            <button class="btn btn-ghost" id="btnFlip">显示释义 <kbd>空格</kbd></button>
+            <button class="btn btn-primary" id="btnKnown">认识 <kbd>2</kbd></button>
+          </div>
+        </div>
+
+        <div id="learnDone" class="session-done hidden">
+          <div class="done-card">
+            <div class="done-emoji">🎯</div>
+            <h2>本轮学习完成</h2>
+            <p id="learnDoneDesc">共学习 10 个词，趁热打铁做一次测试吧。</p>
+            <div class="done-stats">
+              <div><span>认识</span><strong id="doneKnown">0</strong></div>
+              <div><span>需加强</span><strong id="doneWeak">0</strong></div>
+              <div><span>用时</span><strong id="doneTime">0:00</strong></div>
+            </div>
+            <div class="done-actions">
+              <button class="btn btn-primary btn-lg" id="btnGoTest">开始今日测试</button>
+              <button class="btn btn-ghost" id="btnLearnAgain">再学一轮</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== 测试 ========== -->
+      <section class="view" id="view-test">
+        <div id="testIntro" class="session-intro">
+          <div class="intro-card">
+            <div class="intro-badge">测试设置</div>
+            <h2 id="testIntroTitle">今日测试</h2>
+            <p id="testIntroDesc">测试范围：今日新学单词 + 艾宾浩斯到期的复习词。</p>
+            <div class="intro-stats">
+              <div><span>题库词量</span><strong id="testPoolCount">0</strong></div>
+              <div><span>今日新词</span><strong id="testTodayNew">0</strong></div>
+              <div><span>到期复习</span><strong id="testDueCount">0</strong></div>
+            </div>
+            <div class="choice-group" id="testModeGroup">
+              <label class="choice-card"><input type="radio" name="testMode" value="mix" checked /><span><b>混合题型</b><em>选择题 + 填空题交替</em></span></label>
+              <label class="choice-card"><input type="radio" name="testMode" value="choice" /><span><b>纯选择题</b><em>四选一，速度更快</em></span></label>
+              <label class="choice-card"><input type="radio" name="testMode" value="fill" /><span><b>纯填空题</b><em>拼写输出，强度更高</em></span></label>
+            </div>
+            <div class="intro-row">
+              <label class="field">
+                <span>题目数量</span>
+                <select id="testCount"><option value="10">10 题</option><option value="15">15 题</option><option value="20" selected>20 题</option><option value="0">全部</option></select>
+              </label>
+              <label class="type-toggle"><input type="checkbox" id="optWrongOnly" /><span>只练错题本</span></label>
+            </div>
+            <button class="btn btn-primary btn-lg" id="btnStartTest">开始测试</button>
+            <p class="tip">答题后立即反馈，答错自动进入错题本并触发二次学习。</p>
+          </div>
+        </div>
+
+        <div id="testQuiz" class="session hidden">
+          <div class="session-bar">
+            <div class="session-bar-left">
+              <span class="tag tag-live" id="quizType">选择题</span>
+              <span class="session-count"><b id="quizIdx">1</b> / <span id="quizTotal">10</span></span>
+              <span class="quiz-score">正确 <b id="quizScore">0</b></span>
+            </div>
+            <div class="session-progress"><i id="quizProgress" style="width:0%"></i></div>
+            <button class="link-btn" id="btnExitQuiz">退出</button>
+          </div>
+
+          <div class="quiz-card">
+            <div class="quiz-prompt" id="quizPrompt">选择正确的中文释义</div>
+            <div class="quiz-word" id="quizWord">abandon</div>
+            <div class="quiz-phonetic" id="quizPhonetic">/əˈbændən/</div>
+            <div class="quiz-options" id="quizOptions"></div>
+            <div class="quiz-fill hidden" id="quizFill">
+              <div class="fill-hint" id="fillHint">a _ _ _ _ _ _</div>
+              <div class="fill-row">
+                <input type="text" id="fillInput" autocomplete="off" spellcheck="false" placeholder="输入英文单词" />
+                <button class="btn btn-primary" id="btnFillSubmit">提交</button>
+              </div>
+            </div>
+            <div class="quiz-feedback hidden" id="quizFeedback"></div>
+            <div class="quiz-foot">
+              <span class="quiz-tip" id="quizTip"></span>
+              <button class="btn btn-primary" id="btnNextQ" disabled>下一题</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="testResult" class="session-done hidden">
+          <div class="done-card result-card">
+            <div class="result-top">
+              <div class="result-ring-wrap">
+                <svg class="ring" viewBox="0 0 120 120">
+                  <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+                  <circle class="ring-fg" id="resultRing" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7"></circle>
+                </svg>
+                <div class="ring-label"><strong id="resultPct">0%</strong><span>正确率</span></div>
+              </div>
+              <div class="result-copy">
+                <h2 id="resultTitle">测试完成</h2>
+                <p id="resultDesc">答对 0 题，答错 0 题。</p>
+                <div class="result-tags" id="resultTags"></div>
+              </div>
+            </div>
+            <div class="result-wrong" id="resultWrong"></div>
+            <div class="done-actions">
+              <button class="btn btn-primary btn-lg" id="btnSecondLearn">错题二次学习</button>
+              <button class="btn btn-ghost" id="btnRetestWrong">只测错题</button>
+              <button class="btn btn-ghost" id="btnBackDash">回到概览</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== 复习计划 ========== -->
+      <section class="view" id="view-review">
+        <div class="grid grid-3">
+          <div class="stat-card"><div class="stat-ico ico-rose">⏰</div><div class="stat-body"><span>今日到期</span><strong id="revDue">0</strong><em>个单词</em></div></div>
+          <div class="stat-card"><div class="stat-ico ico-amber">📈</div><div class="stat-body"><span>7 日待复习</span><strong id="revWeek">0</strong><em>个单词</em></div></div>
+          <div class="stat-card"><div class="stat-ico ico-green">🏅</div><div class="stat-body"><span>已掌握</span><strong id="revMastered">0</strong><em>个单词</em></div></div>
+        </div>
+
+        <section class="card">
+          <div class="card-head">
+            <div>
+              <h3>艾宾浩斯记忆曲线</h3>
+              <p>每个单词按 1 → 2 → 4 → 7 → 15 → 30 天的间隔重复，答错则回到第一阶段</p>
+            </div>
+            <button class="btn btn-primary" id="btnReviewNow">开始复习测试</button>
+          </div>
+          <div id="ebbinghausChart" class="ebb-chart"></div>
+        </section>
+
+        <section class="card">
+          <div class="card-head">
+            <div>
+              <h3>待复习清单</h3>
+              <p id="revListSub">按逾期天数排序，越久越靠前</p>
+            </div>
+            <input type="search" class="search" id="revSearch" placeholder="搜索单词…" />
+          </div>
+          <div id="revList" class="rev-list"></div>
+        </section>
+
+        <section class="card">
+          <div class="card-head">
+            <div>
+              <h3>未来 7 天复习负载</h3>
+              <p>提前了解每天的复习压力，便于安排时间</p>
+            </div>
+          </div>
+          <div id="futureChart" class="mini-chart tall"></div>
+        </section>
+      </section>
+
+      <!-- ========== 收藏笔记 ========== -->
+      <section class="view" id="view-notebook">
+        <div class="tabs" id="nbTabs">
+          <button class="tab active" data-tab="fav">⭐ 收藏 <em id="favCount">0</em></button>
+          <button class="tab" data-tab="note">📝 笔记 <em id="noteCount">0</em></button>
+          <button class="tab" data-tab="wrong">❌ 错题本 <em id="wrongCount">0</em></button>
+        </div>
+        <div class="nb-toolbar">
+          <input type="search" class="search grow" id="nbSearch" placeholder="搜索单词或释义…" />
+          <button class="btn btn-ghost" id="btnStudyNb">学习本列表</button>
+        </div>
+        <div id="nbList" class="nb-list"></div>
+      </section>
+
+      <!-- ========== 统计 ========== -->
+      <section class="view" id="view-stats">
+        <div class="grid grid-4">
+          <div class="stat-card"><div class="stat-ico ico-indigo">📖</div><div class="stat-body"><span>累计学习</span><strong id="sLearned">0</strong><em id="sLearnedSub">共 298 词</em></div></div>
+          <div class="stat-card"><div class="stat-ico ico-green">🎯</div><div class="stat-body"><span>累计正确率</span><strong id="sAcc">—</strong><em id="sAccSub">0 / 0 题</em></div></div>
+          <div class="stat-card"><div class="stat-ico ico-amber">🧠</div><div class="stat-body"><span>掌握率</span><strong id="sMastery">0%</strong><em id="sMasterySub">掌握 0 词</em></div></div>
+          <div class="stat-card"><div class="stat-ico ico-rose">🔥</div><div class="stat-body"><span>连续学习</span><strong id="sStreak">0</strong><em>天</em></div></div>
+        </div>
+
+        <section class="card">
+          <div class="card-head">
+            <div><h3>每日完成量</h3><p>柱状为当日新学词量，虚线为计划每日词量</p></div>
+            <div class="seg" id="rangeSeg">
+              <button data-range="14" class="active">14 天</button>
+              <button data-range="30">30 天</button>
+            </div>
+          </div>
+          <div id="dailyChart" class="chart-box"></div>
+        </section>
+
+        <div class="grid grid-2">
+          <section class="card">
+            <div class="card-head"><div><h3>测试正确率走势</h3><p>每日测试的答题正确率</p></div></div>
+            <div id="accChart" class="chart-box sm"></div>
+          </section>
+          <section class="card">
+            <div class="card-head"><div><h3>记忆阶段分布</h3><p>单词在艾宾浩斯曲线中的位置</p></div></div>
+            <div id="stageChart" class="chart-box sm"></div>
+          </section>
+        </div>
+
+        <section class="card">
+          <div class="card-head">
+            <div><h3>学习热力图</h3><p>颜色越深表示当日学习量越大</p></div>
+          </div>
+          <div id="heatmap" class="heatmap"></div>
+        </section>
+
+        <section class="card">
+          <div class="card-head"><div><h3>每日明细</h3><p>最近 14 天的学习与测试记录</p></div></div>
+          <div class="table-wrap">
+            <table class="table" id="dailyTable">
+              <thead><tr><th>日期</th><th>新学</th><th>测试</th><th>答对</th><th>正确率</th><th>状态</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <!-- ========== 设置 ========== -->
+      <section class="view" id="view-settings">
+        <div class="grid grid-2">
+          <section class="card">
+            <div class="card-head"><div><h3>学习计划</h3><p>调整周期后会重新分配每日任务，已学记录不受影响</p></div></div>
+            <div class="form">
+              <label class="field">
+                <span>学习天数</span>
+                <select id="setDays">
+                  <option value="30">30 天 · 高强度冲刺</option>
+                  <option value="45">45 天 · 快节奏</option>
+                  <option value="60">60 天 · 标准</option>
+                  <option value="90">90 天 · 推荐（约 50 词/天）</option>
+                  <option value="120">120 天 · 稳扎稳打</option>
+                  <option value="180">180 天 · 长期备考</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>每日词量（自动 / 自定义）</span>
+                <div class="inline-field">
+                  <select id="setAuto">
+                    <option value="1">按天数自动计算</option>
+                    <option value="0">自定义每日词量</option>
+                  </select>
+                  <input type="number" id="setPerDay" min="3" max="100" value="10" disabled />
+                </div>
+              </label>
+              <label class="field">
+                <span>默认测试题型</span>
+                <select id="setTestMode">
+                  <option value="mix">混合题型</option>
+                  <option value="choice">选择题</option>
+                  <option value="fill">填空题</option>
+                </select>
+              </label>
+              <div class="plan-preview" id="planPreview"></div>
+              <button class="btn btn-primary" id="btnSavePlan">保存计划</button>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card-head"><div><h3>学习偏好</h3><p>个性化你的训练体验</p></div></div>
+            <div class="form">
+              <label class="switch-row">
+                <span><b>显示音标</b><em>学习卡片与测试题中显示音标</em></span>
+                <input type="checkbox" id="setPhonetic" checked />
+              </label>
+              <label class="switch-row">
+                <span><b>答对后自动跳下一题</b><em>关闭后需手动点击下一题</em></span>
+                <input type="checkbox" id="setAutoNext" checked />
+              </label>
+              <label class="switch-row">
+                <span><b>单词自动朗读</b><em>进入新单词时播放读音（需浏览器支持）</em></span>
+                <input type="checkbox" id="setAutoSpeak" />
+              </label>
+              <div class="divider"></div>
+              <div class="data-actions">
+                <button class="btn btn-ghost" id="btnExport">导出学习数据</button>
+                <label class="btn btn-ghost file-btn">导入数据<input type="file" id="importFile" accept="application/json" /></label>
+                <button class="btn btn-danger-ghost" id="btnReset">重置全部进度</button>
+              </div>
+              <p class="tip">数据仅保存在当前浏览器的 localStorage 中，换设备请先导出备份。</p>
+            </div>
+          </section>
+        </div>
+
+        <section class="card">
+          <div class="card-head"><div><h3>词库信息</h3><p>内置 CET-4 高频核心词汇</p></div></div>
+          <div class="about-grid" id="aboutGrid"></div>
+        </section>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="words.js"></script>
+<script src="words-cet4.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
